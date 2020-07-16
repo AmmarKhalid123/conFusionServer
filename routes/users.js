@@ -9,8 +9,20 @@ router.use(bodyParser.json());
 
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.route('/')
+.get(authenticate.verifyUser, authenticate.verifyAdmin, function(req, res, next) {
+	User.find({})
+  	.then((users) => {
+		
+		const result = users.map(user => {
+			delete user["salt"];
+			delete user["hash"];
+			return user;
+		});
+		res.statusCode = 200;
+ 		res.setHeader('Content-Type', 'application/json');
+		res.json(result);
+ 	})
 });
 
 router.post('/signup', function(req, res, next) {
