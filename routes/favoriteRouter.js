@@ -75,16 +75,29 @@ favRouter.route('/:dishId')
 .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
     Favorites.findOne({user: req.user._id})
     .then((favts) => {
-        if (favts.favorites.indexOf(req.params.dishId) === -1) {
-            favts.favorites.push(req.params.dishId);
-        };
-        favts.save()
-        .then((resp) => {
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(resp);
-        })
-        .catch(err => next(err));
+        if (favts === null) {
+            Favorites.create({user: req.user._id, favorites: [req.params.dishId]})
+            .then((favt) => {
+                console.log("Favt created: ", favt);
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(favt);
+            }, (err) => next(err))
+            .catch((err) => next(err))
+        }
+        else {
+            if (favts.favorites.indexOf(req.params.dishId) === -1) {
+                favts.favorites.push(req.params.dishId);
+            };
+            favts.save()
+            .then((resp) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(resp);
+            })
+            .catch(err => next(err));
+        }
+        
     });
 })
 .delete(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
