@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const authenticate = require('../authenticate');
 const cors = require('./cors');
 
@@ -107,7 +107,7 @@ dishRouter.route('/:dishId/comments')
     Dishes.findById(req.params.dishId)
     .then((dish) => {
         if (dish != null) {
-            req.body.author = req.user._id // user is present in request bcs we're doing verifyUser before
+            req.body.author = req.user._id; // user is present in request bcs we're doing verifyUser before
             dish.comments.push(req.body);
             dish.save()
             .then((dish) => {
