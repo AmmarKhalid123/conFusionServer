@@ -47,7 +47,7 @@ Express server built locally using REST API to serve the data for the rConFusion
  - post on '/' : uploads an image on server-side( Mongo )
  
  ## PS: 
- * user must be login
+ *user must be login
  ** admin must be login
  
  ## Closing
